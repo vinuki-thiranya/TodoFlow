@@ -3,34 +3,43 @@
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { db } from "./db"
+import * as schema from "./db/schema"
 
 // Configure authentication using Better Auth
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
-    provider: "pg", 
+    provider: "pg",
+    schema: {
+      user: schema.users,
+      session: schema.sessions,
+      account: schema.accounts,
+      
+      verification: schema.verifications,
+    },
   }),
 
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
   },
 
   // User model configuration
   user: {
-    
     additionalFields: {
-      user_role: {
-        type: "string",      
-        required: false,     
+      userRole: {
+        type: "string",
+        required: false,
         defaultValue: "user",
       },
     },
   },
 
   // Trusted origins for authentication cookies / redirects
-  trustedOrigins:
-    process.env.NODE_ENV === "production"
-      ? ["https://your-app.vercel.app"]
-      : ["http://localhost:3000"],      
+  trustedOrigins: [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://172.18.32.1:3000",
+  ],
 })
 
 // TypeScript type for the current session
