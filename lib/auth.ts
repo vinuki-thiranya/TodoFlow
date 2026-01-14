@@ -6,8 +6,8 @@ import { Resend } from "resend"
 import { db } from "./db"
 import * as schema from "./db/schema"
 
-// Initialize Resend
-const resend = new Resend(process.env.RESEND_API_KEY!)
+// Initialize Resend conditionally
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 // Configure authentication using Better Auth
 export const auth = betterAuth({
@@ -21,13 +21,24 @@ export const auth = betterAuth({
     },
   }),
 
+  // Ensure proper base URL for production
+  baseURL: process.env.BETTER_AUTH_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: process.env.NODE_ENV === 'production', // Enable for production
+    requireEmailVerification: false, // Disabled for development - set to true for production if you have email service
     sendResetPassword: async ({ user, url }) => {
+      // Skip email sending if no email service configured
+      if (!resend) {
+        console.log("🚧 DEV MODE: Email service not configured, skipping password reset email for", user.email)
+        return
+      }
+      
       // Only send reset emails to your verified email in development
       if (process.env.NODE_ENV !== 'production' && user.email !== 'vtkatugampala@gmail.com') {
         console.log("🚧 DEV MODE: Skipping password reset email for", user.email)
+        return
+      }
         return
       }
       
