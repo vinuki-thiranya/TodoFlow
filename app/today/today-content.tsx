@@ -113,6 +113,7 @@ export default function TodayContent({ user }: { user: any }) {
         <TaskDetailPanel
           task={selectedTask}
           tags={tags}
+          user={user}
           onUpdate={async (updates) => {
             await updateTodo({ id: selectedTask.id, ...updates })
             setSelectedTask({ ...selectedTask, ...updates })

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
-import { todos } from "@/lib/db/schema"
+import { todos, users } from "@/lib/db/schema"
 import { eq, and, desc } from "drizzle-orm"
 import { getSession } from "@/lib/auth/utils"
 
@@ -8,47 +8,58 @@ import { getSession } from "@/lib/auth/utils"
 export async function GET(request: NextRequest) {
   const session = await getSession()
   if (!session) {
-
     return NextResponse.json(
       { error: "Unauthorized" }, 
       { status: 401 })
   }
 
   const { searchParams } = new URL(request.url)
-
   const listId = searchParams.get("listId")
 
   try {
-
-    let query: any = db.select().from(todos)
-
-
-    // Role-based filtering
-    if (session.user.userRole === "admin" 
-           || session.user.userRole === "manager") {
+    let query: any
+    
+    // Role-based filtering with user information for managers/admins
+    if (session.user.userRole === "admin" || session.user.userRole === "manager") {
+      query = db
+        .select({
+          id: todos.id,
+          name: todos.name,
+          description: todos.description,
+          state: todos.state,
+          dueAt: todos.dueAt,
+          listId: todos.listId,
+          ownerId: todos.ownerId,
+          createdOn: todos.createdOn,
+          updatedOn: todos.updatedOn,
+          owner: {
+            id: users.id,
+            name: users.name,
+            email: users.email
+          }
+        })
+        .from(todos)
+        .leftJoin(users, eq(todos.ownerId, users.id))
+      
       if (listId) query = query.where(eq(todos.listId, listId))
-    } else 
-  {
-      if (listId)
+    } else {
+      // Users only see their own todos without owner info
+      query = db.select().from(todos)
+      if (listId) {
         query = query.where(
-          and(eq(todos.ownerId, session.user.id), 
-          eq(todos.listId, listId))
+          and(eq(todos.ownerId, session.user.id), eq(todos.listId, listId))
         )
-
-      else query = query.where(eq(todos.ownerId, session.user.id))
+      } else {
+        query = query.where(eq(todos.ownerId, session.user.id))
+      }
     }
-
 
     const result = await query.orderBy(desc(todos.createdOn))
     return NextResponse.json(result)
-  } catch (error)
-  
-  {
-
+  } catch (error) {
     return NextResponse.json(
-      { error:
-       "Failed to fetch todos" },
-         { status: 500 })
+      { error: "Failed to fetch todos" },
+      { status: 500 })
   }
 }
 
@@ -87,7 +98,7 @@ export async function POST(request: NextRequest) {
         listId,
         description,
         state: state || "draft",
-        
+
         dueAt: dueAt ? new Date(dueAt) : undefined,
       })
       .returning()

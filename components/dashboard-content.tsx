@@ -3,6 +3,7 @@
 import { useTodos } from "@/hooks/use-todos"
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import UsersOverview from "@/components/users-overview"
 
 export default function DashboardContent({ user }: { user: any }) {
   const { todos, isLoading } = useTodos()
@@ -37,15 +38,33 @@ export default function DashboardContent({ user }: { user: any }) {
     )
   }
 
+  const isAdminOrManager = user?.userRole === 'admin' || user?.userRole === 'manager'
+
   return (
     <main className="flex-1 p-8 overflow-auto">
-      <h1 className="text-4xl font-bold mb-8">Dashboard</h1>
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold mb-2">Dashboard</h1>
+        {isAdminOrManager && (
+          <div className="flex items-center gap-2">
+            <span className="text-lg text-gray-600">Welcome,</span>
+            <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+              user?.userRole === 'admin' 
+                ? 'bg-red-100 text-red-800' 
+                : 'bg-blue-100 text-blue-800'
+            }`}>
+              {user?.userRole?.toUpperCase()} {user?.name || user?.email}
+            </span>
+          </div>
+        )}
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {/* Progress Pie Chart */}
         <Card className="col-span-1 md:col-span-2 lg:col-span-2">
           <CardHeader>
-            <CardTitle>Task Progress</CardTitle>
+            <CardTitle>
+              {isAdminOrManager ? 'All Tasks Progress' : 'Your Task Progress'}
+            </CardTitle>
           </CardHeader>
           <CardContent className="flex justify-center h-80">
             {total > 0 ? (
@@ -70,7 +89,9 @@ export default function DashboardContent({ user }: { user: any }) {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center w-full h-full text-gray-400">No tasks yet</div>
+              <div className="flex items-center justify-center w-full h-full text-gray-400">
+                {isAdminOrManager ? 'No tasks in system yet' : 'No tasks yet'}
+              </div>
             )}
           </CardContent>
         </Card>
@@ -100,6 +121,13 @@ export default function DashboardContent({ user }: { user: any }) {
           </CardContent>
         </Card>
       </div>
+
+      {/* Users Overview - Only for Admin and Manager */}
+      {isAdminOrManager && (
+        <div className="grid grid-cols-1 gap-6">
+          <UsersOverview />
+        </div>
+      )}
     </main>
   )
 }

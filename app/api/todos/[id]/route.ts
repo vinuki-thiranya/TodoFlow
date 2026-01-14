@@ -52,10 +52,18 @@ export async function PATCH(
          { status: 404 })
     }
 
-    // Check permissions: user can only update their own todos
-    if (session.user.userRole === "user" && existingTodo.ownerId !== session.user.id) {
+    // Check permissions based on user role attributes (ABAC)
+    if (session.user.userRole === "user") {
+      if (existingTodo.ownerId !== session.user.id) {
+        return NextResponse.json(
+          { error: "You can only update your own todos" },
+          { status: 403 }
+        )
+      }
+    } else {
+      // Admin and Manager roles are not allowed to update todos
       return NextResponse.json(
-        { error: "You can only update your own todos" },
+        { error: `${session.user.userRole}s cannot update todos` },
         { status: 403 }
       )
     }

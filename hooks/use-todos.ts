@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+﻿import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 
 export function useTodos() {
   const queryClient = useQueryClient()
@@ -40,10 +40,27 @@ export function useTodos() {
     },
   })
 
+  const deleteTodo = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await fetch(`/api/todos/${id}`, {
+        method: "DELETE",
+      })
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || "Failed to delete task")
+      }
+      return response.json()
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] })
+    },
+  })
+
   return {
     todos,
     isLoading,
     createTodo: createTodo.mutateAsync,
     updateTodo: updateTodo.mutateAsync,
+    deleteTodo: deleteTodo.mutateAsync,
   }
 }

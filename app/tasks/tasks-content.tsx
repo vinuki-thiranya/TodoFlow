@@ -126,6 +126,7 @@ function TasksContentInner({ user }: { user: any }) {
         <TaskDetailPanel
           task={selectedTask}
           tags={tags}
+          user={user}
           onUpdate={async (updates) => {
             try {
               await updateTodo({ id: selectedTask.id, ...updates })

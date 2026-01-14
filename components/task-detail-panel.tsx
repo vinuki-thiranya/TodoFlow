@@ -1,24 +1,27 @@
-"use client"
+﻿"use client"
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { X } from "lucide-react"
+import { X, Trash2 } from "lucide-react"
+import { useTodos } from "@/hooks/use-todos"
 
 interface TaskDetailPanelProps {
   task: any
   tags: any[]
+  user: any
   onUpdate: (updates: any) => void
   onClose: () => void
 }
 
-export default function TaskDetailPanel({ task, tags, onUpdate, onClose }: TaskDetailPanelProps) {
+export default function TaskDetailPanel({ task, tags, user, onUpdate, onClose }: TaskDetailPanelProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [editedName, setEditedName] = useState(task.name)
   const [editedDescription, setEditedDescription] = useState(task.description || "")
   const [editedDueAt, setEditedDueAt] = useState(task.dueAt ? new Date(task.dueAt).toISOString().split('T')[0] : "")
   const [editedState, setEditedState] = useState(task.state)
+  const { deleteTodo } = useTodos()
 
   // Sync state when task prop changes
   useEffect(() => {
@@ -36,7 +39,6 @@ export default function TaskDetailPanel({ task, tags, onUpdate, onClose }: TaskD
         dueAt: editedDueAt ? new Date(editedDueAt).toISOString() : null,
         state: editedState,
       }
-      console.log("Saving task updates:", updates)
       await onUpdate(updates)
       setIsEditing(false)
     }
@@ -50,13 +52,35 @@ export default function TaskDetailPanel({ task, tags, onUpdate, onClose }: TaskD
     setIsEditing(false)
   }
 
+  const handleDelete = async () => {
+    if (confirm("Are you sure you want to delete this task?")) {
+      await deleteTodo(task.id)
+      onClose()
+    }
+  }
+
+  // RBAC Permission Logic (ABAC)
+  const canDelete = user?.userRole === 'admin' || (user?.userRole === 'user' && task.state === 'draft' && task.ownerId === user?.id)
+  const canUpdate = user?.userRole === 'user' && task.ownerId === user?.id
+
   return (
     <div className="fixed right-0 top-0 h-screen w-96 bg-white shadow-xl border-l overflow-y-auto z-50">
       <div className="bg-primary text-primary-foreground p-6 sticky top-0 flex justify-between items-center">
         <h2 className="text-xl font-bold">Task Details</h2>
-        <button onClick={onClose} className="p-1 hover:bg-primary/80 rounded">
-          <X className="w-5 h-5" />
-        </button>
+        <div className="flex items-center gap-2">
+          {canDelete && (
+            <button 
+              onClick={handleDelete}
+              className="p-1 hover:bg-red-500 rounded transition-colors text-white"
+              title="Delete task"
+            >
+              <Trash2 className="w-5 h-5" />
+            </button>
+          )}
+          <button onClick={onClose} className="p-1 hover:bg-primary/80 rounded">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
       <div className="p-6 space-y-6">
@@ -110,7 +134,7 @@ export default function TaskDetailPanel({ task, tags, onUpdate, onClose }: TaskD
             <select
               value={editedState}
               onChange={(e) => setEditedState(e.target.value)}
-              className="w-full mt-2 p-2 border rounded text-sm"
+              className="w-full mt-2 p-2 border-2 border-gray-200 focus:border-primary rounded text-sm shadow-sm focus:shadow-sm transition-all"
             >
               <option value="draft">Draft</option>
               <option value="in_progress">In Progress</option>
@@ -121,22 +145,32 @@ export default function TaskDetailPanel({ task, tags, onUpdate, onClose }: TaskD
           )}
         </div>
 
-        <div className="flex gap-2 pt-4">
-          {isEditing ? (
-            <>
-              <Button onClick={handleSave} className="flex-1">
-                Save changes
+        {/* Show task owner for managers and admins */}
+        {(user?.userRole === 'manager' || user?.userRole === 'admin') && task.owner && (
+          <div>
+            <Label className="text-sm text-muted-foreground">Created by</Label>
+            <p className="text-sm mt-2 font-medium">{task.owner.name || task.owner.email}</p>
+          </div>
+        )}
+
+        {canUpdate && (
+          <div className="flex gap-2 pt-4">
+            {isEditing ? (
+              <>
+                <Button onClick={handleSave} className="flex-1">
+                  Save changes
+                </Button>
+                <Button onClick={handleCancel} variant="outline" className="flex-1">
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <Button onClick={() => setIsEditing(true)} className="w-full">
+                Edit Task
               </Button>
-              <Button onClick={handleCancel} variant="outline" className="flex-1">
-                Cancel
-              </Button>
-            </>
-          ) : (
-            <Button onClick={() => setIsEditing(true)} className="w-full">
-              Edit Task
-            </Button>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )
