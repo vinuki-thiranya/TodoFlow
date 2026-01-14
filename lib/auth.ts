@@ -74,6 +74,12 @@ export const auth = betterAuth({
         return // Skip email sending
       }
       
+      // Check if resend is configured
+      if (!resend) {
+        console.log("🚧 EMAIL: Resend not configured, skipping verification email for", user.email)
+        return
+      }
+      
       console.log("📧 Sending real email to:", user.email)
       
       try {
