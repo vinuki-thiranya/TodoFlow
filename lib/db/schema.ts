@@ -19,9 +19,10 @@ export const todoState = pgEnum("todo_state", [
 
 
 export const listTheme = pgEnum("list_theme", [
-  "#EF4444",
-  "#3B82F6",
-  "#FBBF24",
+  "#a8d5ba",
+  "#d4a5a5",
+  "#b8e0d2",
+  "#fbbf24",
 ])
 
 
@@ -104,7 +105,7 @@ export const todoLists = pgTable("todo_lists", {
     .references(() => users.id, { onDelete: "cascade" }),
 
   title: text("title").notNull(),
-  themeColor: listTheme("theme_color").default("#EF4444"),
+  themeColor: listTheme("theme_color").default("#a8d5ba"),
   orderIndex: integer("order_index").default(0),
 
   createdOn: timestamp("created_on").defaultNow(),
@@ -158,7 +159,7 @@ export const tags = pgTable("tags", {
   id: uuid("id").primaryKey().defaultRandom(),
   ownerId: text("owner_id")
     .notNull()
-    
+
     .references(() => users.id, { onDelete: "cascade" }),
 
   label: text("label").notNull(),

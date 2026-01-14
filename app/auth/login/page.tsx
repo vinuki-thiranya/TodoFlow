@@ -71,7 +71,6 @@ export default function LoginPage() {
                     type="email"
                     placeholder="your@email.com"
                     required
-                    autoComplete="email"
                     className="bg-white/50 border-green-100"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -85,9 +84,9 @@ export default function LoginPage() {
                     type="password"
                     placeholder="••••••••"
                     required
-                    autoComplete="current-password"
                     className="bg-white/50 border-green-100"
                     value={password}
+
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
@@ -107,6 +106,7 @@ export default function LoginPage() {
           </CardContent>
         </Card>
       </div>
+      
     </div>
   )
 }

@@ -9,7 +9,8 @@ export async function GET(request: NextRequest) {
   const session = await getSession()
   if (!session) {
 
-    return NextResponse.json({ error: "Unauthorized" }, 
+    return NextResponse.json(
+      { error: "Unauthorized" }, 
       { status: 401 })
   }
 
@@ -44,7 +45,8 @@ export async function GET(request: NextRequest) {
   
   {
 
-    return NextResponse.json({ error:
+    return NextResponse.json(
+      { error:
        "Failed to fetch todos" },
          { status: 500 })
   }
@@ -57,17 +59,17 @@ export async function POST(request: NextRequest) {
   const session = await getSession()
   if (!session)
      {
-    return NextResponse.json({ error:
-       "Unauthorized" },
-         { status: 401 })
+    return NextResponse.json(
+      { error:"Unauthorized" },
+         { status: 401 }
+        )
   }
 
 
   // Only normal users can create todos
   if (session.user.userRole !== "user") {
     return NextResponse.json(
-      { error: 
-        "Only users can create todos" },
+      { error: "Only users can create todos" },
       { status: 403 }
     )
   }
@@ -85,6 +87,7 @@ export async function POST(request: NextRequest) {
         listId,
         description,
         state: state || "draft",
+        
         dueAt: dueAt ? new Date(dueAt) : undefined,
       })
       .returning()

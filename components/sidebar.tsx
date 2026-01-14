@@ -30,6 +30,7 @@ export default function Sidebar({ user }: SidebarProps) {
   const [showNewListInput, setShowNewListInput] = useState(false)
   const [showNewTagInput, setShowNewTagInput] = useState(false)
   const [newListName, setNewListName] = useState("")
+  const [newListColor, setNewListColor] = useState("#a8d5ba")
   const [newTagName, setNewTagName] = useState("")
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [showProfileModal, setShowProfileModal] = useState(false)
@@ -45,8 +46,9 @@ export default function Sidebar({ user }: SidebarProps) {
 
   const handleCreateList = async () => {
     if (newListName.trim()) {
-      await createList(newListName, "#EF4444")
+      await createList(newListName, newListColor)
       setNewListName("")
+      setNewListColor("#a8d5ba")
       setShowNewListInput(false)
     }
   }
@@ -64,25 +66,33 @@ export default function Sidebar({ user }: SidebarProps) {
   
 
   const listColors: { [key: string]: string } = {
-    "#EF4444": "bg-red-200",
-    "#3B82F6": "bg-blue-200",
-    "#FBBF24": "bg-yellow-200",
+    "#a8d5ba": "bg-green-100",
+    "#d4a5a5": "bg-rose-100",
+    "#b8e0d2": "bg-cyan-100",
+    "#fbbf24": "bg-amber-100",
   }
 
   return (
     <>
       <aside
-        className={`${sidebarOpen ? "w-72" : "w-20"} bg-sidebar border-r border-sidebar-border flex flex-col transition-all duration-300 h-screen`}
+        className={`${sidebarOpen ? "w-85" : "w-20"} bg-white border-r border-sidebar-border flex flex-col transition-all duration-300 h-screen shadow-lg`}
       >
         <div className="p-4 border-b border-sidebar-border">
           <div className="flex items-center justify-between mb-4">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 hover:bg-gray-200 rounded-lg transition"
-              title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
-            >
-              <Menu className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="p-2 hover:bg-gray-200 rounded-lg transition"
+                title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+              {sidebarOpen && (
+                <div className="flex items-center gap-2">
+                  <h1 className="text-4xl font-bold bg-gradient-to-r from-[#a8d5ba] to-[#d4a5a5] bg-clip-text text-transparent">TodoFlow</h1>
+                </div>
+              )}
+            </div>
           </div>
           {sidebarOpen && (
             <div className="relative">
@@ -146,11 +156,10 @@ export default function Sidebar({ user }: SidebarProps) {
                   <Link key={list.id} href={`/tasks?list=${list.id}`}>
                     <Button variant="ghost" className="w-full justify-start">
                       <div
-                        className={`w-3 h-3 rounded-full mr-3 ${
-                          listColors[list.color as keyof typeof listColors] || "bg-gray-200"
-                        }`}
+                        className="w-3 h-3 rounded-full mr-3"
+                        style={{ backgroundColor: list.themeColor || "#a8d5ba" }}
                       />
-                      <span className="mr-auto">{list.name}</span>
+                      <span className="mr-auto">{list.title}</span>
                     </Button>
                   </Link>
                 ))}
@@ -164,6 +173,19 @@ export default function Sidebar({ user }: SidebarProps) {
                       onKeyPress={(e) => e.key === "Enter" && handleCreateList()}
                       className="text-sm"
                     />
+                    <div className="flex gap-2">
+                      {["#a8d5ba", "#d4a5a5", "#b8e0d2", "#fbbf24"].map((color) => (
+                        <button
+                          key={color}
+                          onClick={() => setNewListColor(color)}
+                          className={`w-5 h-5 rounded-full border-2 transition-all ${
+                            newListColor === color ? "border-gray-800 scale-110" : "border-gray-300"
+                          }`}
+                          style={{ backgroundColor: color }}
+                          title={color}
+                        />
+                      ))}
+                    </div>
                     <Button size="sm" onClick={handleCreateList}>
                       Add
                     </Button>
@@ -192,11 +214,11 @@ export default function Sidebar({ user }: SidebarProps) {
                     key={tag.id}
                     className="px-3 py-1 rounded-full text-sm"
                     style={{
-                      backgroundColor: tag.bg_color,
-                      color: tag.text_color,
+                      backgroundColor: tag.backgroundColor,
+                      color: tag.textColor,
                     }}
                   >
-                    {tag.name}
+                    {tag.label}
                   </button>
                 ))}
                 {showNewTagInput ? (
@@ -206,7 +228,7 @@ export default function Sidebar({ user }: SidebarProps) {
                     value={newTagName}
                     onChange={(e) => setNewTagName(e.target.value)}
                     onKeyPress={(e) => e.key === "Enter" && handleCreateTag()}
-                    className="text-sm px-3 py-1 h-auto"
+                    className="text-sm px-3 py-1 h-auto shadow-sm border-2 border-gray-200 focus:border-primary focus:shadow-sm transition-all"
                   />
                 ) : (
                   <button

@@ -1,11 +1,11 @@
 "use client"
 
-import { useTodos } from "@/lib/queries/tasks"
+import { useTodos } from "@/hooks/use-todos"
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function DashboardContent({ user }: { user: any }) {
-  const { data: todos = [], isLoading } = useTodos()
+  const { todos, isLoading } = useTodos()
 
   // Calculate stats from todos
   const taskStats = {

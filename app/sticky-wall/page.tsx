@@ -7,10 +7,12 @@ import StickyWallContent from "./sticky-wall-content"
 export default async function StickyWallPage() {
   const session = await auth.api.getSession({
     headers: await headers(),
-  })
+  }
+)
 
   if (!session) {
     redirect("/auth/login")
+
   }
 
   return (

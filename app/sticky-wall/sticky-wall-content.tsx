@@ -68,20 +68,20 @@ export default function StickyWallContent({ user }: { user: any }) {
 
         {/* Add New Note Card */}
         {showNewNote ? (
-          <div className="p-4 rounded-lg shadow-md bg-white border-2 border-dashed border-gray-300 min-h-48 flex flex-col">
+          <div className="p-4 rounded-lg shadow-sm bg-white border-2 border-dashed border-gray-300 min-h-48 flex flex-col">
             <Input
               type="text"
               placeholder="Note title..."
               value={newNoteTitle}
               onChange={(e) => setNewNoteTitle(e.target.value)}
-              className="mb-2 text-sm font-bold border-none focus-visible:ring-0 p-0"
+              className="mb-2 text-sm font-bold border-2 border-gray-200 focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 p-2 rounded shadow-sm transition-all"
               autoFocus
             />
             <textarea
               placeholder="Note content..."
               value={newNoteContent}
               onChange={(e) => setNewNoteContent(e.target.value)}
-              className="flex-1 text-sm resize-none p-0 border-none outline-none mb-2 min-h-[80px]"
+              className="flex-1 text-sm resize-none p-2 border-2 border-gray-200 focus:border-primary rounded shadow-sm outline-none mb-2 min-h-[80px] transition-all focus:shadow-sm"
             />
             <div className="flex gap-2 mb-3">
               {colors.map((color) => (

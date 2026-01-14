@@ -10,7 +10,9 @@ export async function DELETE(
 ) {
   const session = await getSession()
   if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    return NextResponse.json(
+        { error: "Unauthorized" }, 
+        { status: 401 })
   }
 
   const { id } = await params
@@ -22,7 +24,9 @@ export async function DELETE(
     )
   )
 
-  return NextResponse.json({ success: true })
+  return NextResponse.json(
+    { success: true }
+)
 }
 
 export async function PATCH(
@@ -31,7 +35,10 @@ export async function PATCH(
 ) {
   const session = await getSession()
   if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    return NextResponse.json(
+        { error: "Unauthorized" },
+         { status: 401 }
+        )
   }
 
   const { id } = await params
