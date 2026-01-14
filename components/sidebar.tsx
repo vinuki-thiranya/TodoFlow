@@ -93,7 +93,7 @@ export default function Sidebar({ user }: SidebarProps) {
         </div>
 
         <div className="flex-1 overflow-y-auto p-4">
-
+          
           {/* Tasks Section */}
           <div className="mb-8">
             {sidebarOpen && (
@@ -128,7 +128,7 @@ export default function Sidebar({ user }: SidebarProps) {
                   {sidebarOpen && <span className="mr-auto ml-2">Calendar</span>}
                 </Button>
               </Link>
-              <Link href="/dashboard/sticky-wall">
+              <Link href="/sticky-wall">
                 <Button variant="ghost" className="w-full justify-start text-base" title="Sticky Wall">
                   <Columns3 className="w-5 h-5 flex-shrink-0" />
                   {sidebarOpen && <span className="mr-auto ml-2">Sticky Wall</span>}
