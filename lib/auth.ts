@@ -11,6 +11,7 @@ const resend = new Resend(process.env.RESEND_API_KEY!)
 
 // Configure authentication using Better Auth
 export const auth = betterAuth({
+  baseURL: process.env.BETTER_AUTH_URL || process.env.NEXTAUTH_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'),
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: {
