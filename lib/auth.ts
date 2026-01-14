@@ -6,8 +6,8 @@ import { Resend } from "resend"
 import { db } from "./db"
 import * as schema from "./db/schema"
 
-// Initialize Resend
-const resend = new Resend(process.env.RESEND_API_KEY!)
+// Initialize Resend safely for build time
+const resend = new Resend(process.env.RESEND_API_KEY || "dummy-key-for-build")
 
 // Configure authentication using Better Auth
 export const auth = betterAuth({
