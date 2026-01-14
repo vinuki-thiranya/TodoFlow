@@ -20,7 +20,7 @@ A modern task management application built with Next.js, featuring role-based ac
 - **Database**: PostgreSQL with Drizzle ORM
 - **Authentication**: Better Auth
 - **Styling**: Tailwind CSS
-- **UI Components**: Custom components with Lucide React icons
+- **UI Components**: shadcn/ui components with Lucide React icons
 - **State Management**: TanStack Query
 
 ## Quick Start
@@ -129,7 +129,7 @@ todoflow/
 │   ├── dashboard/         # Dashboard page
 │   └── today/            # Today view
 ├── components/            # React components
-│   ├── ui/               # Reusable UI components
+│   ├── ui/               # shadcn/ui components
 │   └── providers/        # Context providers
 ├── drizzle/              # Database migrations
 ├── hooks/                # Custom React hooks
