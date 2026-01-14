@@ -97,38 +97,23 @@ TodoFlow implements a simplified ABAC (Attribute-Based Access Control) model wit
 - **Update**: Can update their own todos
 - **Delete**: Can only delete their own todos in draft state
 
-## Testing Different Roles
 
-### Default Test Accounts
 
-The system comes with pre-configured test accounts:
-
-**Admin Account**
-- Email: `admin@todoflow.com`
-- Password: Use any password when signing up
-
-**Manager Account**
-- Email: `manager@todoflow.com`
-- Password: Use any password when signing up
-
+-
 ### How to Test
 
 1. **Test as Admin:**
-   - Sign up with `admin@todoflow.com`
-   - Create some tasks as a regular user first
-   - Login as admin and notice the trash icon on all tasks
-   - Try deleting tasks in any status
+   - View the admin dashboard with users overview
+   - Notice you can delete any task from any user
 
 2. **Test as Manager:**
    - Open an incognito window or different browser
-   - Sign up with `manager@todoflow.com`
-   - Notice you can see all tasks with creator names
-   - Observe that edit/delete buttons are hidden
+   - View the manager dashboard with users overview
+   - Notice you can see all users and their tasks
 
 3. **Test as Regular User:**
-   - Sign up with any other email (e.g., `user@example.com`)
    - Create and manage your own tasks
-   - Notice you only see your own tasks
+   - Notice you only see your personal dashboard
 
 ### Email Verification Note
 
