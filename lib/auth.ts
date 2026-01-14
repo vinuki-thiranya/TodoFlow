@@ -39,8 +39,6 @@ export const auth = betterAuth({
         console.log("🚧 DEV MODE: Skipping password reset email for", user.email)
         return
       }
-        return
-      }
       
       await resend.emails.send({
         from: process.env.FROM_EMAIL!,
