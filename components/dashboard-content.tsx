@@ -125,7 +125,7 @@ export default function DashboardContent({ user }: { user: any }) {
       {/* Users Overview - Only for Admin and Manager */}
       {isAdminOrManager && (
         <div className="grid grid-cols-1 gap-6">
-          <UsersOverview />
+          <UsersOverview currentUser={user} />
         </div>
       )}
     </main>

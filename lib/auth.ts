@@ -136,25 +136,6 @@ export const auth = betterAuth({
         defaultValue: "user",
       },
     },
-    // Auto-assign roles based on email patterns during signup
-    onCreate: async (user) => {
-      const email = user.email.toLowerCase();
-      let userRole = "user"; // default role
-      
-      // Check if email contains admin or manager patterns
-      if (email.includes("admin")) {
-        userRole = "admin";
-      } else if (email.includes("manager")) {
-        userRole = "manager";
-      }
-      
-      console.log(`🔐 Auto-assigning role "${userRole}" to user with email: ${user.email}`);
-      
-      return {
-        ...user,
-        userRole,
-      };
-    },
   },
 
   // Trusted origins for authentication cookies / redirects

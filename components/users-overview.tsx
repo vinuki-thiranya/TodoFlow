@@ -2,11 +2,41 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { useUsers } from "@/hooks/use-users"
-import { User, Mail, Calendar, CheckCircle, Clock, FileText } from "lucide-react"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { User, Mail, Calendar, CheckCircle, Clock, FileText, Trash2 } from "lucide-react"
 
-export default function UsersOverview() {
+export default function UsersOverview({ currentUser }: { currentUser: any }) {
   const { data: users, isLoading, error } = useUsers()
+  const queryClient = useQueryClient()
+
+  const deleteTodoMutation = useMutation({
+    mutationFn: async (todoId: string) => {
+      const response = await fetch(`/api/todos/${todoId}`, {
+        method: 'DELETE',
+      })
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to delete todo')
+      }
+      return response.json()
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] })
+      queryClient.invalidateQueries({ queryKey: ['todos'] })
+    },
+    onError: (error: Error) => {
+      console.error('Error deleting todo:', error)
+      alert(error.message)
+    }
+  })
+
+  const handleDeleteTodo = (todoId: string, todoName: string) => {
+    if (window.confirm(`Are you sure you want to delete "${todoName}"?`)) {
+      deleteTodoMutation.mutate(todoId)
+    }
+  }
 
   if (isLoading) {
     return (
@@ -130,11 +160,24 @@ export default function UsersOverview() {
                           </div>
                           <span className="font-medium">{task.name}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
-                          {task.dueAt && (
-                            <span>Due: {new Date(task.dueAt).toLocaleDateString()}</span>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            {task.dueAt && (
+                              <span>Due: {new Date(task.dueAt).toLocaleDateString()}</span>
+                            )}
+                            <span>Created: {new Date(task.createdOn).toLocaleDateString()}</span>
+                          </div>
+                          {currentUser?.userRole === 'admin' && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDeleteTodo(task.id, task.name)}
+                              className="h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                              disabled={deleteTodoMutation.isPending}
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
                           )}
-                          <span>Created: {new Date(task.createdOn).toLocaleDateString()}</span>
                         </div>
                       </div>
                     ))}
