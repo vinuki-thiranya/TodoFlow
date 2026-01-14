@@ -1,15 +1,13 @@
-import { NextRequest } from "next/server"
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
 
-export async function getSession(request?: NextRequest | Request | undefined) {
-  const url = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/get-session`
-
-  const headers: Record<string, string> = {}
-  if (request && 'headers' in request) {
-    const cookie = (request as Request).headers.get('cookie')
-    if (cookie) headers.cookie = cookie
+export async function getSession() {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    })
+    return session
+  } catch (error) {
+    return null
   }
-
-  const res = await fetch(url, { headers, cache: 'no-store' })
-  if (!res.ok) return null
-  return res.json()
 }
