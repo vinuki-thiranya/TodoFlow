@@ -1,19 +1,19 @@
-# TodoFlow 📝
+# TodoFlow
 
 A modern task management application built with Next.js, featuring role-based access control (RBAC) and a clean, intuitive interface.
 
-## ✨ Features
+## Features
 
-- **🎨 Modern UI**: Clean design with Sage Green and Dusty Rose color palette
-- **🔐 Role-Based Access Control**: Three distinct user roles with specific permissions
-- **📱 Responsive Design**: Works seamlessly on desktop and mobile devices
-- **⚡ Real-time Updates**: Instant task updates using TanStack Query
-- **🗂️ List Management**: Organize tasks into customizable lists
-- **🏷️ Tagging System**: Categorize tasks with tags
-- **📅 Due Dates**: Set and track task deadlines
-- **🔍 Smart Filtering**: Filter tasks by status, date, and more
+- **Modern UI**: Clean design with Sage Green and Dusty Rose color palette
+- **Role-Based Access Control**: Three distinct user roles with specific permissions
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
+- **Real-time Updates**: Instant task updates using TanStack Query
+- **List Management**: Organize tasks into customizable lists
+- **Tagging System**: Categorize tasks with tags
+- **Due Dates**: Set and track task deadlines
+- **Smart Filtering**: Filter tasks by status, date, and more
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend**: Next.js 15, React 19, TypeScript
 - **Backend**: Next.js API Routes
@@ -23,7 +23,7 @@ A modern task management application built with Next.js, featuring role-based ac
 - **UI Components**: Custom components with Lucide React icons
 - **State Management**: TanStack Query
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -75,39 +75,39 @@ A modern task management application built with Next.js, featuring role-based ac
 6. **Open your browser**
    Navigate to `http://localhost:3000`
 
-## 👥 User Roles & Permissions
+## User Roles & Permissions
 
 TodoFlow implements a simplified ABAC (Attribute-Based Access Control) model with three user roles:
 
-### 🛡️ Admin Role
+### Admin Role
 - **View**: Can see all todos from all users (with creator names)
-- **Create**: ❌ Cannot create todos
-- **Update**: ❌ Cannot update todos
-- **Delete**: ✅ Can delete any todo, regardless of status
+- **Create**: Cannot create todos
+- **Update**: Cannot update todos
+- **Delete**: Can delete any todo, regardless of status
 
-### 👔 Manager Role
+### Manager Role
 - **View**: Can see all todos from all users (with creator names)
-- **Create**: ❌ Cannot create todos
-- **Update**: ❌ Cannot update todos
-- **Delete**: ❌ Cannot delete todos
+- **Create**: Cannot create todos
+- **Update**: Cannot update todos
+- **Delete**: Cannot delete todos
 
-### 👤 User Role (Default)
+### User Role (Default)
 - **View**: Can only see their own todos
-- **Create**: ✅ Can create todos
-- **Update**: ✅ Can update their own todos
-- **Delete**: ✅ Can only delete their own todos in draft state
+- **Create**: Can create todos
+- **Update**: Can update their own todos
+- **Delete**: Can only delete their own todos in draft state
 
-## 🧪 Testing Different Roles
+## Testing Different Roles
 
 ### Default Test Accounts
 
 The system comes with pre-configured test accounts:
 
-**🛡️ Admin Account**
+**Admin Account**
 - Email: `admin@todoflow.com`
 - Password: Use any password when signing up
 
-**👔 Manager Account**
+**Manager Account**
 - Email: `manager@todoflow.com`
 - Password: Use any password when signing up
 
@@ -130,11 +130,11 @@ The system comes with pre-configured test accounts:
    - Create and manage your own tasks
    - Notice you only see your own tasks
 
-### 📧 Email Verification Note
+### Email Verification Note
 
 **Email verification is disabled for development** since email service providers require paid plans. Users can sign up and login immediately without email confirmation. In production, you would enable email verification through services like Resend or SendGrid.
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 todoflow/
@@ -155,7 +155,7 @@ todoflow/
 └── public/               # Static assets
 ```
 
-## 🎨 Design System
+## Design System
 
 ### Color Palette
 - **Primary**: Sage Green (`#86A789`)
@@ -168,7 +168,7 @@ todoflow/
 - Responsive design principles
 - Accessible color contrasts
 
-## 🔧 Database Management
+## Database Management
 
 ### Useful Commands
 
@@ -193,7 +193,7 @@ If you need to recreate the default admin and manager accounts:
 node setup-accounts.js
 ```
 
-## 🚀 Deployment
+## Deployment
 
 ### Environment Variables for Production
 
@@ -214,7 +214,7 @@ FROM_EMAIL="noreply@your-domain.com"
 2. Set up environment variables in Vercel dashboard
 3. Deploy automatically on push to main branch
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
@@ -222,11 +222,11 @@ FROM_EMAIL="noreply@your-domain.com"
 4. Push to the branch: `git push origin feature/amazing-feature`
 5. Open a Pull Request
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🆘 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
